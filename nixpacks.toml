@@ -1,0 +1,8 @@
+# https://nixpacks.com/docs/configuration/file
+
+[dependencies]
+# List any additional dependencies if needed
+nodejs = "20.x"
+
+[phases.setup]
+    aptPkgs = ['...', 'graphicsmagick', 'ghostscript']

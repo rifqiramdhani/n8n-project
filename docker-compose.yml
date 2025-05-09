@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  n8n:
+    build: .
+    environment:
+      - DB_POSTGRESDB_DATABASE="${{Postgres-v2.POSTGRES_DB}}"
+      - DB_POSTGRESDB_HOST="${{Postgres-v2.PGHOST}}"
+      - DB_POSTGRESDB_PASSWORD="${{Postgres-v2.POSTGRES_PASSWORD}}"
+      - DB_POSTGRESDB_PORT="${{Postgres-v2.PGPORT}}"
+      - DB_POSTGRESDB_USER="${{Postgres-v2.POSTGRES_USER}}"
+      - DB_TYPE="postgresdb"
+      - ENABLE_ALPINE_PRIVATE_NETWORKING="true"
+      - EXECUTIONS_MODE="queue"
+      - N8N_EDITOR_BASE_URL="https://${{RAILWAY_PUBLIC_DOMAIN}}"
+      - N8N_ENCRYPTION_KEY="Rw~Ri_s~1hq9XY8AkPB0w8aZ1C*Le7cB"
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS="true"
+      - N8N_LISTEN_ADDRESS="::"
+      - N8N_RUNNERS_ENABLED="true"
+      - NODE_OPTIONS="--max_old_space_size=8192"
+      - OFFLOAD_MANUAL_EXECUTIONS_TO_WORKERS="true"
+      - PORT="5678"
+      - QUEUE_BULL_REDIS_DUALSTACK="true"
+      - QUEUE_BULL_REDIS_HOST="${{Redis-b45H.REDISHOST}}"
+      - QUEUE_BULL_REDIS_PASSWORD="${{Redis-b45H.REDIS_PASSWORD}}"
+      - QUEUE_BULL_REDIS_PORT="${{Redis-b45H.REDISPORT}}"
+      - QUEUE_BULL_REDIS_USERNAME="${{Redis-b45H.REDISUSER}}"
+      - WEBHOOK_URL="https://${{RAILWAY_PUBLIC_DOMAIN}}"
+    ports:
+      - "5678:5678"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB=n8n
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=n8n_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
